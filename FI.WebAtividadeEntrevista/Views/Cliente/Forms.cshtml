@@ -1,0 +1,190 @@
+﻿<script language="JavaScript">
+
+    // MASCARA PARA FORMATAR O CPF DO CLIENTE
+    function mascaraCPF() {
+        debugger
+        if (validaCPF()) {
+            var cpf = $('#CPF').val();
+            var cpf_formatado = '';
+            cpf_formatado = cpf.replace(/\D/g, "")
+            cpf_formatado = cpf_formatado.replace(/(\d{3})(\d)/, "$1.$2")
+            cpf_formatado = cpf_formatado.replace(/(\d{3})(\d)/, "$1.$2")
+            cpf_formatado = cpf_formatado.replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+            $('#CPF').val(cpf_formatado);
+        }
+        debugger
+    }
+
+    function cep() {
+        debugger
+        var cep = $('#CEP').val();
+        cep = cep.replace(/\D/g, "")
+        cep = cep.replace(/^(\d{3})(\d)/, "$1.$2"); 
+        cep = cep.replace(/^(\d{3}\.\d{2})(\d)/, "$1-$2");
+        $('#CEP').val(cep);
+        debugger
+    }
+
+    //Valida CPF 
+    function validaCPF() {
+        var cpf = $('#CPF').val();
+
+        // Remove caracteres não numéricos
+        cpf = cpf.replace(/\D/g, '');
+
+        // Verifica se o CPF não esta vazio
+        if (cpf == '' || cpf == null) {
+            alert("CPF é obrigatório!");
+            $('#CPF').focus();
+            return false;
+        }
+
+        // Verifica se o CPF possui 11 dígitos
+        if (cpf.length !== 11) {
+            alert("CPF Invalido!");
+            $('#CPF').focus();
+            return false;
+        }
+
+        // Verifica se todos os dígitos são iguais
+        const digits = cpf.split('').map(Number);
+        if (new Set(digits).size === 1) {
+            alert("CPF Invalido!");
+            $('#CPF').val("");
+            $('#CPF').focus();
+            return false;
+        }
+
+        // Calcula o primeiro dígito verificador
+        let soma = 0;
+        for (let i = 0; i < 9; i++) {
+            soma += parseInt(cpf.charAt(i)) * (10 - i);
+        }
+        let resto = 11 - (soma % 11);
+        let digitoVerificador1 = resto === 10 || resto === 11 ? 0 : resto;
+
+        // Verifica o primeiro dígito verificador
+        if (digitoVerificador1 !== parseInt(cpf.charAt(9))) {
+            alert("CPF Invalido!");
+            $('#CPF').val("");
+            $('#CPF').focus();
+            return false;
+        }
+
+        // Calcula o segundo dígito verificador
+        soma = 0;
+        for (let i = 0; i < 10; i++) {
+            soma += parseInt(cpf.charAt(i)) * (11 - i);
+        }
+        resto = 11 - (soma % 11);
+        let digitoVerificador2 = resto === 10 || resto === 11 ? 0 : resto;
+
+        // Verifica o segundo dígito verificador
+        if (digitoVerificador2 !== parseInt(cpf.charAt(10))) {
+            alert("CPF Invalido!");
+            return false;
+        }
+
+        // CPF válido
+        return true;
+    }
+
+</script>
+
+<form id="formCadastro" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Nome">Nome:</label>
+                <input required="required" type="text" class="form-control" id="Nome" name="Nome" placeholder="Ex.: Leandro" maxlength="50">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="CPF">CPF:</label>
+                <input required="required" type="text" class="form-control" id="CPF" name="CPF" placeholder="Ex.: 123.456.789-10" maxlength="11" onchange="mascaraCPF();">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Sobrenome">Sobrenome:</label>
+                <input required="required" type="text" class="form-control" id="Sobrenome" name="Sobrenome" placeholder="Ex.: Sampaio" maxlength="255">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Nacionalidade">Nacionalidade:</label>
+                <input required="required" type="text" class="form-control" id="Nacionalidade" name="Nacionalidade" placeholder="Ex.: brasileira(o)" maxlength="50">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="CEP">CEP:</label>
+                <input required="required" type="text" class="form-control" id="CEP" name="CEP" placeholder="Ex.: 035.71-120" maxlength="8" onchange="cep();">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="Estado">Estado:</label>
+                <select required="required" id="Estado" class="form-control" name="Estado">
+                    <option value="">Selecione</option>
+                    <option value="SP">São Paulo</option>
+                    <option value="PE">Pernambuco</option>
+                    <option value="MG">Minas Gerais</option>
+                    <option value="BA">Bahia</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="Cidade">Cidade:</label>
+                <input required="required" type="text" class="form-control" id="Cidade" name="Cidade" maxlength="50" placeholder="Ex.: São Paulo">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="Logradouro">Logradouro:</label>
+                <input required="required" type="text" class="form-control" id="Logradouro" name="Logradouro" placeholder="Ex.: Av Paulista" maxlength="400">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Email">E-mail:</label>
+                <input required="required" type="text" class="form-control" id="Email" name="Email" placeholder="Ex.: email@email.com" maxlength="2079">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Telefone">Telefone:</label>
+                <input required="required" type="tel" class="form-control" id="Telefone" name="Telefone" placeholder="Ex.: (11) 2020-3030" maxlength="15">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <button type="button" class="btn btn-default" name="Beneficiario" id="Beneficiario" data-toggle="modal">Beneficiários</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="pull-right">
+                <button type="submit" class="btn btn-sm btn-success">Salvar</button>
+                @Html.ActionLink("Voltar", "Index", "Cliente", new { }, new { @class = "btn btn-sm btn-danger" })
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
